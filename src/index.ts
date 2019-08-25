@@ -1,16 +1,6 @@
-import { fromEvent } from "rxjs";
+import { fromEvent } from 'rxjs';
+import { scan } from 'rxjs/operators';
 
-// grab button reference
-const button = document.getElementsByClassName("button");
-
-// create an observable of button clicks
-const myObservable = fromEvent(button, "click");
-
-const subscription = myObservable.subscribe({
-  // on successful emissions
-  next: event => console.log(event),
-  // on errors
-  error: error => console.log(error),
-  // called once on completion
-  complete: () => console.log("complete!")
-});
+fromEvent(document, 'click')
+  .pipe(scan(count => count + 1, 0))
+  .subscribe(count => console.log(`Clicked ${count} times`));
