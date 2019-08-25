@@ -1,6 +1,8 @@
-import { fromEvent } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { fromEvent } from "rxjs";
+import { map, concatAll } from "rxjs/operators";
+import { fromFetch } from "rxjs/fetch";
 
-fromEvent(document, 'click')
-  .pipe(scan(count => count + 1, 0))
-  .subscribe(count => console.log(`Clicked ${count} times`));
+fromEvent(document, "click").pipe(
+  map(url => fromFetch("https://jsonplaceholder.typicode.com/todos/1")),
+  concatAll()
+);
