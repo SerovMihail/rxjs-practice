@@ -1,8 +1,18 @@
-import { fromEvent } from "rxjs";
-import { map, concatAll } from "rxjs/operators";
-import { fromFetch } from "rxjs/fetch";
-
-fromEvent(document, "click").pipe(
-  map(url => fromFetch("https://jsonplaceholder.typicode.com/todos/1")),
-  concatAll()
-);
+import { from, Subject } from 'rxjs';
+import { multicast } from 'rxjs/operators';
+ 
+const source = from([1, 2, 3]);
+const subject = new Subject();
+const multicasted = source.pipe(multicast(subject));
+ 
+// These are, under the hood, `subject.subscribe({...})`:
+multicasted.subscribe({
+  next: (v) => console.log(`observerA: ${v}`)
+});
+multicasted.subscribe({
+  next: (v) => console.log(`observerB: ${v}`)
+});
+ 
+// This is, under the hood, `source.subscribe(subject)`:
+// multicasted;
+source.subscribe(subject);
